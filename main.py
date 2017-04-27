@@ -1,8 +1,7 @@
 import pygame
 import os
 
-from drawComp import drawComp
-
+from player import Player
 
 
 
@@ -14,14 +13,12 @@ def main():
     clock = pygame.time.Clock()
     testTime = 0
     done = False
-    dC = drawComp(None, "Base_M.png", 48, 48)
-    dC.setAnimation(1)
-    setAnimation = 0
+    player = Player(1)
     while not done:
-        elapsedTime = clock.tick() / 1000
+        elapsedTime = clock.tick(60) / 1000
         testTime += elapsedTime
-        if dC.isAnimationFinished():
-            dC.nextAnimation()
+        if player.drawComp.isAnimationFinished():
+            player.moveRight()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True
@@ -31,9 +28,10 @@ def main():
                 windowHeight = event.dict['size'][1]
                 #levelManager.setWindowSize(windowWidth, windowHeight)
         screen.blit(bg_screen, (0,0))
-        dC.draw(screen, elapsedTime)
-        pygame.display.flip()
-                
+        player.update(elapsedTime)
+        print(elapsedTime)
+        player.draw(screen, elapsedTime)
+        pygame.display.flip()            
     pygame.quit()
 
 

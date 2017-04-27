@@ -3,7 +3,9 @@ import pygame
 import os
 import math
 
-class drawComp:
+from vec2d import Vec2d
+
+class DrawComp:
     def __init__(self, owner,fileName, width, height):
         self.fileName = fileName
         self.owner = owner
@@ -15,6 +17,7 @@ class drawComp:
         self.frameLength = .5
         self.frameTime = 0
         self.animationFinished = False
+        self.originPoint = Vec2d(width/2, height)
         
         folder = "Data"
         try:
@@ -39,6 +42,8 @@ class drawComp:
         print("Animation Amount = ", len(self.animations))
         
     def setAnimation(self, animationIndex):
+        if (self.animationIndex == animationIndex):
+            return
         self.animationIndex = animationIndex
         self.frameTime = 0
         self.subImageIndex = 0
@@ -63,6 +68,5 @@ class drawComp:
             if self.subImageIndex == len(self.animations[self.animationIndex]):
                 self.subImageIndex = 0
                 self.animationFinished = True
-        #surface.blit(self.animations[self.animationIndex][self.subImageIndex], (self.owner.physComp.x, self.owner.physComp.y))
-        surface.blit(self.animations[self.animationIndex][self.subImageIndex], (100,100))
+        surface.blit(self.animations[self.animationIndex][self.subImageIndex], (self.owner.physComp.pos.x, self.owner.physComp.pos.y))
         
