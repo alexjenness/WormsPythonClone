@@ -1,24 +1,26 @@
 import pygame
 import os
 
+from vec2d import Vec2d
 from player import Player
-
+from LevelManager import LevelManager
 
 
 
 def main():
     pygame.init()
-    screen = pygame.display.set_mode((400,400))
-    bg_screen = pygame.Surface((400, 400))
+    screen = pygame.display.set_mode((400,400), pygame.RESIZABLE)
+    pygame.display.set_caption("Spell Slingers")
     clock = pygame.time.Clock()
-    testTime = 0
+
     done = False
-    player = Player(1)
+    
+    levelManager = LevelManager(screen)
+    levelManager.loadLevel(1)
+    levelManager.addPlayer()
+    dT = 0
     while not done:
-        elapsedTime = clock.tick(60) / 1000
-        testTime += elapsedTime
-        if player.drawComp.isAnimationFinished():
-            player.moveRight()
+        dT = clock.tick(60) / 1000
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True
@@ -26,16 +28,11 @@ def main():
                 screen = pygame.display.set_mode(event.dict['size'], pygame.RESIZABLE)
                 windowWidth = event.dict['size'][0]
                 windowHeight = event.dict['size'][1]
-                #levelManager.setWindowSize(windowWidth, windowHeight)
-        screen.blit(bg_screen, (0,0))
-        player.update(elapsedTime)
-        print(elapsedTime)
-        player.draw(screen, elapsedTime)
-        pygame.display.flip()            
+                levelManager.setWindowSize(windowWidth, windowHeight)
+        levelManager.update(dT)
+        
+        levelManager.draw(screen, dT)        
     pygame.quit()
-
-
-
 
 
 if __name__ == "__main__":

@@ -14,10 +14,10 @@ class DrawComp:
         self.animations = [] #array of an array
         self.animationIndex = 0
         self.subImageIndex = 0
-        self.frameLength = .5
+        self.frameLength = 1
         self.frameTime = 0
         self.animationFinished = False
-        self.originPoint = Vec2d(width/2, height)
+        self.frameSpeed = 1
         
         folder = "Data"
         try:
@@ -60,7 +60,7 @@ class DrawComp:
             self.animationIndex = 0
             
     def draw(self, surface, deltaTime):
-        self.frameTime += deltaTime
+        self.frameTime += deltaTime * self.frameSpeed
         self.animationFinished = False
         if self.frameTime > self.frameLength:
             self.frameTime = 0
@@ -68,5 +68,5 @@ class DrawComp:
             if self.subImageIndex == len(self.animations[self.animationIndex]):
                 self.subImageIndex = 0
                 self.animationFinished = True
-        surface.blit(self.animations[self.animationIndex][self.subImageIndex], (self.owner.physComp.pos.x, self.owner.physComp.pos.y))
+        surface.blit(self.animations[self.animationIndex][self.subImageIndex], (self.owner.physComp.pos.x - self.owner.originPoint.x, self.owner.physComp.pos.y - self.owner.originPoint.y))
         
