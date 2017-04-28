@@ -19,6 +19,7 @@ class Player:
         self.height = 55
         self.walkSpeed = 48
         self.falling = False
+        self.moving = False
         self.playerId = playerId
         self.direction = Globals.LEFT
         self.originPoint = Vec2d(self.width/2, self.height)
@@ -32,6 +33,7 @@ class Player:
             self.physComp.setVel(Vec2d(0,0))
             self.drawComp.frameSpeed = 0
             self.drawComp.subImageIndex = 0
+            self.moving = False
             
     def moveRight(self):
         if not self.falling:
@@ -40,6 +42,7 @@ class Player:
             if not (self.lvlMgr.loadedMap.checkCollisionLine(self.physComp.pos - Vec2d(self.width/2, self.height), self.physComp.pos + Vec2d(self.width/2, -1))):
                 self.physComp.setVel(Vec2d(50,0))
                 self.drawComp.frameSpeed = 5
+                self.moving = True
             else:
                 self.physComp.setVel(Vec2d(0,0))
                 self.drawComp.frameSpeed = 0
@@ -51,9 +54,11 @@ class Player:
             if not (self.lvlMgr.loadedMap.checkCollisionLine(self.physComp.pos - Vec2d(self.width/2, self.height - 24), self.physComp.pos - Vec2d(self.width/2,2))):
                 self.physComp.setVel(Vec2d(-50,0))
                 self.drawComp.frameSpeed = 5
+                self.moving = True
             else:
                 self.physComp.setVel(Vec2d(0,0))
                 self.drawComp.frameSpeed = 0
+                self.moving
                 
     def longJump(self):
         if not self.falling:
