@@ -14,6 +14,7 @@ class PhysComp:
         self.force = Vec2d(0,0)
         self.width = width
         self.height = height
+        
     def addForce(self, force):
         self.force += force
         
