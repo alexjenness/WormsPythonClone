@@ -49,6 +49,10 @@ class LevelManager:
     def addEntity(self, ent):
         self.entities.append(ent)
         
+    def playerTurnStart(self, index):
+        self.turnPlayer = index
+        self.camera.setFollowObject(self.players[self.turnPlayer])
+        
     def removeEntity(self, ent):
         self.entities.remove(ent)
         
@@ -72,9 +76,10 @@ class LevelManager:
         
         for ent in self.entities:
             ent.update(dT)
+            
+        self.camera.update()
         
     def draw(self, drawTarget, dT):
-        self.camera.setCenter(self.players[self.turnPlayer].physComp.pos + Vec2d(0,-24))
         drawTarget.blit(self.background, (0,0))
         
         self.entitySurface.fill((0,0,0,0))

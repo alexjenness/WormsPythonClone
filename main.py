@@ -18,6 +18,7 @@ def main():
     levelManager = LevelManager(screen)
     levelManager.loadLevel(1)
     levelManager.addPlayer()
+    levelManager.playerTurnStart(0)
     gameState = GS_Playing(levelManager)
     
     dT = 0
