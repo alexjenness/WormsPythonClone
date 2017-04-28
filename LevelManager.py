@@ -5,6 +5,7 @@ Created on Thu Apr 27 15:11:44 2017
 @author: rlwar
 """
 import pygame
+import Globals
 
 from map import *
 from vec2d import Vec2d
@@ -37,6 +38,7 @@ class LevelManager:
             self.loadedMap = Map1(self)
             
         self.background = pygame.Surface((self.loadedMap.width, self.loadedMap.height))
+        self.background.fill((200,200,200,255))
         self.entitySurface = pygame.Surface((self.loadedMap.width, self.loadedMap.height), pygame.SRCALPHA)
         
     def addPlayer(self):
@@ -50,6 +52,18 @@ class LevelManager:
     def removeEntity(self, ent):
         self.entities.remove(ent)
         
+    def processEvent(self, event):
+        if event == Globals.PLAYER_LEFT:
+            self.players[self.turnPlayer].moveLeft()
+        elif event == Globals.PLAYER_RIGHT:
+            self.players[self.turnPlayer].moveRight()
+        elif event == Globals.PLAYER_STOP:
+            self.players[self.turnPlayer].stop()
+        elif event == Globals.TALL_JUMP:
+            self.players[self.turnPlayer].tallJump()
+        elif event == Globals.LONG_JUMP:
+            self.players[self.turnPlayer].longJump()
+            
     def update(self, dT):
         if self.loadedMap == None:
             return

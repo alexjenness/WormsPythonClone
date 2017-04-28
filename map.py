@@ -9,10 +9,10 @@ class Map:
         self.lvlMgr = lvlMgr
         self.width = width
         self.height = height
-        self.pixelData = [[0 for x in range(self.width)] for y in range (self.height)]
+        self.pixelData = [[0 for x in range(self.height)] for y in range (self.width)]
         self.mapName = mapFileName
         self.mapSurface = None
-        self.gravity = Vec2d(0,100)
+        self.gravity = Vec2d(0,300)
         
         folder = "Data"
         try:
@@ -25,18 +25,26 @@ class Map:
         
         self.generatePixelData()
         
+    def checkCollisionLine(self, point1, point2):
+        if (point1.y == point2.y):
+            for i in range(min(math.floor(point1.x), math.floor(point2.x)), max(math.floor(point1.x), math.floor(point2.x))):
+                if self.pixelData[i][math.floor(point1.y)] == 1:
+                    return True
+        elif (point1.x == point2.x):
+            for i in range(min(math.floor(point2.y), math.floor(point1.y)), max(math.floor(point2.y), math.floor(point1.y))):
+                if self.pixelData[math.floor(point1.x)][i] == 1:
+                    return True
+        return False
+        
     def checkCollision(self, point):
-        yVal = math.floor(point.y + 1)
-        for i in range(math.floor(point.x - 10), math.floor(point.x + 10)):
-            if self.pixelData[yVal][i] == 1:
-                return True
-            
+        if self.pixelData[point.x][point.y] == 1:
+            return True
         return False
     
     def generatePixelData(self):
-        for i in range(0,600):
-            for j in range(0,800):
-                if (self.mapSurface.get_at((j,i)).a == 0):
+        for i in range(0,self.width):
+            for j in range(0,self.height):
+                if (self.mapSurface.get_at((i,j)).a == 0):
                     self.pixelData[i][j] = 0
                 else:
                     self.pixelData[i][j] = 1

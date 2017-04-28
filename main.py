@@ -4,7 +4,7 @@ import os
 from vec2d import Vec2d
 from player import Player
 from LevelManager import LevelManager
-
+from GameStates import GS_Playing
 
 
 def main():
@@ -18,6 +18,8 @@ def main():
     levelManager = LevelManager(screen)
     levelManager.loadLevel(1)
     levelManager.addPlayer()
+    gameState = GS_Playing(levelManager)
+    
     dT = 0
     while not done:
         dT = clock.tick(60) / 1000
@@ -29,6 +31,7 @@ def main():
                 windowWidth = event.dict['size'][0]
                 windowHeight = event.dict['size'][1]
                 levelManager.setWindowSize(windowWidth, windowHeight)
+        gameState.checkInputs()
         levelManager.update(dT)
         
         levelManager.draw(screen, dT)        
