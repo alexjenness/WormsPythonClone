@@ -22,7 +22,6 @@ class LevelManager:
     
     def __init__(self, window):
         self.level = None
-        self.hud = Hud(self)
         self.window = window
         self.windowWidth = 400
         self.windowHeight = 400
@@ -30,6 +29,7 @@ class LevelManager:
         self.background = None 
         self.entitySurface = None 
         self.hudSurface = pygame.Surface((self.windowWidth, self.windowHeight), pygame.SRCALPHA)
+        self.hud = Hud(self)
         
     def loadLevel(self, level):
         self.entities = []
