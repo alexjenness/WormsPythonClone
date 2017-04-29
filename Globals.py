@@ -15,3 +15,8 @@ LONG_JUMP = 4
 #Player directions
 LEFT = 0
 RIGHT = 1
+
+#Game States
+PLAYER_STATE_MOVE = 0
+PLAYER_STATE_AIM = 1
+PLAYER_STATE_ATTACK = 2

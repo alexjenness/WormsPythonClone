@@ -59,7 +59,9 @@ class DrawComp:
         if self.animationIndex == len(self.animations):
             self.animationIndex = 0
             
-    def draw(self, surface, deltaTime):
+    def draw(self, surface, deltaTime,position = False):
+        if not position:
+            position = self.owner.physComp.pos
         self.frameTime += deltaTime * self.frameSpeed
         self.animationFinished = False
         if self.frameTime > self.frameLength:
@@ -68,5 +70,6 @@ class DrawComp:
             if self.subImageIndex == len(self.animations[self.animationIndex]):
                 self.subImageIndex = 0
                 self.animationFinished = True
-        surface.blit(self.animations[self.animationIndex][self.subImageIndex], (self.owner.physComp.pos.x - self.owner.originPoint.x, self.owner.physComp.pos.y - self.owner.originPoint.y))
-        
+        surface.blit(self.animations[self.animationIndex][self.subImageIndex], (position.x - self.owner.originPoint.x, position.y - self.owner.originPoint.y))
+    def handleArrowRotation(self,surface,angle):
+        a = 5
