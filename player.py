@@ -48,7 +48,10 @@ class Player:
                 else:
                     self.physComp.setVel(Vec2d(0,0))
                     self.drawComp.frameSpeed = 0
-        
+        else:
+            self.physComp.setVel(Vec2d(0,0))
+            self.drawComp.frameSpeed = 0
+            
     def moveLeft(self):
         if self.amountMoved < self.moveLimit:
             if not self.falling:
@@ -61,6 +64,10 @@ class Player:
                 else:
                     self.physComp.setVel(Vec2d(0,0))
                     self.drawComp.frameSpeed = 0
+        else:
+            self.physComp.setVel(Vec2d(0,0))
+            self.drawComp.frameSpeed = 0
+            
     def longJump(self):
         if self.amountMoved < self.moveLimit:
             if not self.falling:
@@ -72,7 +79,6 @@ class Player:
                 else:
                     self.physComp.addForce(Vec2d(8000,-7000))
                     self.amountMoved += 5
-
         
     def tallJump(self):
         if self.amountMoved < self.moveLimit:
