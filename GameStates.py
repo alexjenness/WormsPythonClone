@@ -20,6 +20,9 @@ class GS_Playing:
             self.lvlMgr.processEvent(Globals.TALL_JUMP)
         if pressed[pygame.K_LSHIFT]:
             self.lvlMgr.processEvent(Globals.LONG_JUMP)
+        if pressed[pygame.K_r]:
+            #TEMP, change to mouse button or something
+            self.lvlMgr.processEvent(Globals.PLAYER_SHOOT)
             
         if not pressed[pygame.K_a] and not pressed[pygame.K_d]:
             self.lvlMgr.processEvent(Globals.PLAYER_STOP)

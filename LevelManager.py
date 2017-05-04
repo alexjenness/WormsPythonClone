@@ -12,6 +12,7 @@ from vec2d import Vec2d
 from Hud import Hud
 from Camera import Camera
 from player import Player
+from projectile import Projectile
 
 class LevelManager:
     
@@ -56,6 +57,19 @@ class LevelManager:
     def removeEntity(self, ent):
         self.entities.remove(ent)
         
+    def spawnProjectile(self, player):
+        #TEMP values need to be based off player's aim, power, and chosen weapon
+        pPos = Vec2d(player.physComp.pos.x - 10, player.physComp.pos.y - 10)
+        pForceX = -8000 * player.shotPower
+        pForceY = -7000 * player.shotPower
+        if player.direction == Globals.LEFT:
+            projectile = Projectile(self, 0, pPos)
+            projectile.physComp.addForce(Vec2d(pForceX, pForceY))
+        else:
+            projectile = Projectile(self, 0, pPos)
+            projectile.physComp.addForce(Vec2d(-pForceX, pForceY))
+        self.addEntity(projectile)
+        
     def processEvent(self, event):
         if event == Globals.PLAYER_LEFT:
             self.players[self.turnPlayer].moveLeft()
@@ -67,6 +81,11 @@ class LevelManager:
             self.players[self.turnPlayer].tallJump()
         elif event == Globals.LONG_JUMP:
             self.players[self.turnPlayer].longJump()
+        elif event == Globals.PLAYER_SHOOT:
+            if self.players[self.turnPlayer].canShoot == True and self.players[self.turnPlayer].hasShot == False:
+                self.players[self.turnPlayer].canShoot = False
+                self.players[self.turnPlayer].hasShot = True #TODO reset this when their turn starts
+                self.spawnProjectile(self.players[self.turnPlayer])
             
     def update(self, dT):
         if self.loadedMap == None:
@@ -76,6 +95,10 @@ class LevelManager:
         
         for ent in self.entities:
             ent.update(dT)
+            if ent.entType == 1:
+                if ent.toRemove == True:
+                    print('OKAY')
+                    self.entities.remove(ent)
             
         self.camera.update()
         
