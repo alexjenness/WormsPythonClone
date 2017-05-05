@@ -26,6 +26,7 @@ class Player:
         self.canShoot = False
         self.hasShot = False
         self.shotPower = 1 #TODO This is the power of the shot, it amplifies the force applied to the projectile in LevelManager
+        self.shotType = 0 #TODO This is the power of the shot, it changes the type of projectile
         self.playerId = playerId
         self.direction = Globals.LEFT
         self.originPoint = Vec2d(self.width/2, self.height)

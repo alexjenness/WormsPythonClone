@@ -31,6 +31,8 @@ class LevelManager:
         self.entitySurface = None 
         self.hudSurface = pygame.Surface((self.windowWidth, self.windowHeight), pygame.SRCALPHA)
         self.hud = Hud(self)
+        self.mouseX = 0
+        self.mouseY = 0
         
     def loadLevel(self, level):
         self.entities = []
@@ -59,15 +61,33 @@ class LevelManager:
         
     def spawnProjectile(self, player):
         #TEMP values need to be based off player's aim, power, and chosen weapon
-        pPos = Vec2d(player.physComp.pos.x - 10, player.physComp.pos.y - 10)
+        print('Mx: ', self.mouseX + (player.physComp.pos.x - 10))#- (player.physComp.pos.x - 10)
+        print('My: ', self.mouseY + (player.physComp.pos.y - 10))#- (player.physComp.pos.y - 10)
+        pPos = Vec2d(
+            self.mouseX- (player.physComp.pos.x - 10), 
+            self.mouseY- (player.physComp.pos.y - 10))
         pForceX = -8000 * player.shotPower
         pForceY = -7000 * player.shotPower
         if player.direction == Globals.LEFT:
-            projectile = Projectile(self, 0, pPos)
-            projectile.physComp.addForce(Vec2d(pForceX, pForceY))
+            if player.shotType == 0:
+                projectile = Projectile(self, 0, pPos)
+                projectile.physComp.addForce(Vec2d(pForceX, pForceY))
+            elif player.shotType == 1:
+                projectile = Projectile(self, 1, pPos)
+                projectile.physComp.addForce(Vec2d(pForceX, pForceY*10))
+            elif player.shotType == 2:
+                projectile = Projectile(self, 2, pPos)
+                projectile.physComp.addForce(Vec2d(pForceX*10, pForceY))
         else:
-            projectile = Projectile(self, 0, pPos)
-            projectile.physComp.addForce(Vec2d(-pForceX, pForceY))
+            if player.shotType == 0:
+                projectile = Projectile(self, 0, pPos)
+                projectile.physComp.addForce(Vec2d(-pForceX, pForceY))
+            elif player.shotType == 1:
+                projectile = Projectile(self, 1, pPos)
+                projectile.physComp.addForce(Vec2d(-pForceX, pForceY*10))
+            elif player.shotType == 2:
+                projectile = Projectile(self, 2, pPos)
+                projectile.physComp.addForce(Vec2d(-pForceX*10, pForceY))
         self.addEntity(projectile)
         
     def processEvent(self, event):
@@ -84,7 +104,7 @@ class LevelManager:
         elif event == Globals.PLAYER_SHOOT:
             if self.players[self.turnPlayer].canShoot == True and self.players[self.turnPlayer].hasShot == False:
                 self.players[self.turnPlayer].canShoot = False
-                self.players[self.turnPlayer].hasShot = True #TODO reset this when their turn starts
+                #self.players[self.turnPlayer].hasShot = True #TODO reset this when their turn starts
                 self.spawnProjectile(self.players[self.turnPlayer])
             
     def update(self, dT):
@@ -97,7 +117,6 @@ class LevelManager:
             ent.update(dT)
             if ent.entType == 1:
                 if ent.toRemove == True:
-                    print('OKAY')
                     self.entities.remove(ent)
             
         self.camera.update()

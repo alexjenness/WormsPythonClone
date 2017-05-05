@@ -18,7 +18,12 @@ class Projectile:
         #Physics handler component
         self.physComp = PhysComp(self, self.width, self.height)
         #Rendering handler component
-        self.drawComp = DrawComp(self, "tempProjectile.png", self.width, self.height) #TODO fix this to be bullet images
+        if self.type == 0:
+            self.drawComp = DrawComp(self, "projectile1.png", self.width, self.height)
+        elif self.type == 1:
+            self.drawComp = DrawComp(self, "projectile2.png", self.width, self.height)
+        elif self.type == 2:
+            self.drawComp = DrawComp(self, "projectile3.png", self.width, self.height)
         
         #Spawn the projectile
         self.physComp.setPos(self.pos)
