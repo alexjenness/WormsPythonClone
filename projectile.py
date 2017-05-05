@@ -9,8 +9,8 @@ class Projectile:
         self.entType = 1 #This is a projectile
         self.type = type    #0, 1, 2 = Rocket, Grenade, Homing
         self.pos = pos
-        self.width = 34     #TEMP values based off type of projectile
-        self.height = 55    #TEMP
+        self.width = 16     #TEMP values based off type of projectile
+        self.height = 19    #TEMP
         self.originPoint = Vec2d(self.width/2, self.height)
         self.lifespan = 200 #Time until it just times out
         self.toRemove = False
@@ -18,7 +18,7 @@ class Projectile:
         #Physics handler component
         self.physComp = PhysComp(self, self.width, self.height)
         #Rendering handler component
-        self.drawComp = DrawComp(self, "Char1.png", self.width, self.height) #TODO fix this to be bullet images
+        self.drawComp = DrawComp(self, "tempProjectile.png", self.width, self.height) #TODO fix this to be bullet images
         
         #Spawn the projectile
         self.physComp.setPos(self.pos)
