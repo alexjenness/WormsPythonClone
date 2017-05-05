@@ -15,6 +15,7 @@ class Player:
     
     def __init__(self, lvlMgr, playerId):
         self.lvlMgr = lvlMgr
+        self.entType = 0 #This is a player
         self.width = 34
         self.height = 55
         self.walkSpeed = 48
@@ -22,6 +23,9 @@ class Player:
         self.moveLimit = 100
         self.canMove = True
         self.falling = False
+        self.canShoot = False
+        self.hasShot = False
+        self.shotPower = 1 #TODO This is the power of the shot, it amplifies the force applied to the projectile in LevelManager
         self.playerId = playerId
         self.direction = Globals.LEFT
         self.originPoint = Vec2d(self.width/2, self.height)
@@ -96,13 +100,13 @@ class Player:
         self.physComp.update(deltaTime)
         if self.amountMoved >= self.moveLimit:
             self.canMove = False
+            self.canShoot = True
         if not self.falling:
             if not (self.lvlMgr.loadedMap.checkCollisionLine(self.physComp.pos - Vec2d(self.width/2,0), self.physComp.pos + Vec2d(self.width/2,0))):
                 self.falling = True
                 
         else:
             if (self.lvlMgr.loadedMap.checkCollisionLine(self.physComp.pos - Vec2d(self.width/2, 0), self.physComp.pos + Vec2d(self.width/2, 0))):
-                print("landed")
                 self.falling = False
             else:
                 if abs(self.physComp.vel.y) > 60:
@@ -114,6 +118,7 @@ class Player:
             self.physComp.vel.y = 0
         if (self.lvlMgr.loadedMap.checkCollisionLine(self.physComp.pos - Vec2d(self.width/2, 1), self.physComp.pos + Vec2d(self.width/2, -1))):
             self.physComp.setPos(self.physComp.pos + Vec2d(0,-1))
-        print(str(self.canMove))
+
+        
     def draw(self, renderTarget, deltaTime):
         self.drawComp.draw(renderTarget, deltaTime)

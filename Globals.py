@@ -11,6 +11,7 @@ PLAYER_RIGHT = 1
 PLAYER_STOP = 2
 TALL_JUMP = 3
 LONG_JUMP = 4
+PLAYER_SHOOT = 5
 
 #Player directions
 LEFT = 0
