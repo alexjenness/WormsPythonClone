@@ -3,10 +3,15 @@ import pygame
 
 import Globals
 
-class GS_Playing:
+
+class GS_Base:
+    def __init__(self, lvlMgr):
+        self.lvlMgr = lvlMgr;
+        
+class GS_PlayerMove(GS_Base):
     
     def __init__(self, lvlMgr):
-        self.lvlMgr = lvlMgr
+        GS_Base.__init__(self,lvlMgr)
         
         
     def checkInputs(self):
@@ -22,6 +27,18 @@ class GS_Playing:
             self.lvlMgr.processEvent(Globals.LONG_JUMP)
         if not pressed[pygame.K_a] and not pressed[pygame.K_d]:
             self.lvlMgr.processEvent(Globals.PLAYER_STOP)
+        
+                
+class GS_PlayerAttack(GS_Base):
+    
+    def __init__(self, lvlMgr):
+        GS_Base.__init__(self,lvlMgr)
+        
+    def checkInputs(self):
+        pressed = pygame.key.get_pressed()
+        clicked = pygame.mouse.get_pressed()
+
         if clicked == (1,0,0):
-            if self.lvlMgr.players[self.lvlMgr.turnPlayer].state == Globals.PLAYER_STATE_ATTACK:
-                self.lvlMgr.processEvent(Globals.SHOOT)
+            self.lvlMgr.processEvent(Globals.SHOOT)
+            
+                

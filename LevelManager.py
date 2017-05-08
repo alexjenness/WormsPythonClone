@@ -31,6 +31,7 @@ class LevelManager:
         self.entitySurface = None 
         self.hudSurface = pygame.Surface((self.windowWidth, self.windowHeight), pygame.SRCALPHA)
         self.hud = Hud(self)
+        self.changeGamestate = None;
         
     def loadLevel(self, level):
         self.entities = []
@@ -63,6 +64,7 @@ class LevelManager:
             self.players[self.turnPlayer].state = Globals.PLAYER_STATE_MOVE
             self.players[self.turnPlayer].canMove = True
             self.camera.setFollowObject(self.players[self.turnPlayer])
+        self.changeGamestate(Globals.GS_PLAYER_MOVE)
 
             
     def removeEntity(self, ent):
@@ -111,7 +113,8 @@ class LevelManager:
             ent.draw(self.entitySurface, dT)
         
         for pro in self.projectiles:
-            pro.draw(self.entitySurface,dT)
+            pro.draw(self.entitySurface, dT)
+
         drawTarget.blit(self.entitySurface, (-self.camera.pos.x,-self.camera.pos.y))
         
         self.hudSurface.fill((0,0,0,0))
@@ -121,6 +124,8 @@ class LevelManager:
         
         pygame.display.flip()
         
+    def setChangeGamestateFunction(self, functionPointer):
+        self.changeGamestate = functionPointer
         
     def setWindowSize(self, width, height):
         self.windowWidth = width
