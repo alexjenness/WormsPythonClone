@@ -98,7 +98,7 @@ class Player:
         if self.state == Globals.PLAYER_STATE_ATTACK:
             mousePos = pygame.mouse.get_pos()
             self.lvlMgr.projectiles.append(Projectile(self.lvlMgr,Vec2d(mousePos[0],mousePos[1]),self))
-            self.lvlMgr.projectiles[len(self.lvlMgr.projectiles)-1].setInitVel
+            #self.lvlMgr.projectiles[len(self.lvlMgr.projectiles)-1].setInitVel
             self.attacked = True
             
             
@@ -107,6 +107,7 @@ class Player:
             self.physComp.update(deltaTime)
             if self.amountMoved >= self.moveLimit:
                 self.canMove = False
+                self.lvlMgr.changeGamestate(Globals.GS_PLAYER_ATTACK)
             if not self.falling:
                 if not (self.lvlMgr.loadedMap.checkCollisionLine(self.physComp.pos - Vec2d(self.width/2,0), self.physComp.pos + Vec2d(self.width/2,0))):
                     self.falling = True           
@@ -128,7 +129,7 @@ class Player:
                 self.state = Globals.PLAYER_STATE_ATTACK
         elif self.state == Globals.PLAYER_STATE_ATTACK:
             if self.attacked == True:
-                self.lvlMgr.camera.followObject()
+                #self.lvlMgr.camera.setFollowObject(self.lvlMgr.projectiles[len(self.lvlMgr.projectiles) - 1])
                 self.lvlMgr.processEvent(Globals.PLAYER_STATE_TURN_END)
             
     def draw(self, renderTarget, deltaTime):
