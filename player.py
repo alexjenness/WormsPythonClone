@@ -104,27 +104,20 @@ class Player:
             
     def update(self, deltaTime):
         self.physComp.update(deltaTime)
-        if not self.falling:
-           if not (self.lvlMgr.loadedMap.checkCollisionLine(self.physComp.pos - Vec2d(self.width/2,0), self.physComp.pos + Vec2d(self.width/2,0))):
-               self.falling = True           
-        else:
-           if (self.lvlMgr.loadedMap.checkCollisionLine(self.physComp.pos - Vec2d(self.width/2, 0), self.physComp.pos + Vec2d(self.width/2, 0))):
-               #print("landed")
-               self.falling = False
-           else:
-               if abs(self.physComp.vel.y) > 60:
-                   self.drawComp.subImageIndex = 0
-                   self.drawComp.frameSpeed = 0
-        if self.falling:       
-            self.physComp.addForce(self.lvlMgr.loadedMap.gravity)
-        else:
-            self.physComp.vel.y = 0
+        
+        if abs(self.physComp.vel.y) > 60:
+           self.drawComp.subImageIndex = 0
+           self.drawComp.frameSpeed = 0
+           
         if (self.lvlMgr.loadedMap.checkCollisionLine(self.physComp.pos - Vec2d(self.width/2, 1), self.physComp.pos + Vec2d(self.width/2, -1))):
                 self.physComp.setPos(self.physComp.pos + Vec2d(0,-1)) 
+                
         if self.state == Globals.PLAYER_STATE_MOVE:
             if self.amountMoved >= self.moveLimit:
                 self.canMove = False
                 self.lvlMgr.changeGamestate(Globals.GS_PLAYER_ATTACK)
+                self.lvlMgr.processEvent(Globals.PLAYER_STOP)
+                self.state = Globals.PLAYER_STATE_ATTACK
             if not self.falling:
                 if not (self.lvlMgr.loadedMap.checkCollisionLine(self.physComp.pos - Vec2d(self.width/2,0), self.physComp.pos + Vec2d(self.width/2,0))):
                     self.falling = True           
@@ -142,8 +135,6 @@ class Player:
                 self.physComp.vel.y = 0
             if (self.lvlMgr.loadedMap.checkCollisionLine(self.physComp.pos - Vec2d(self.width/2, 1), self.physComp.pos + Vec2d(self.width/2, -1))):
                 self.physComp.setPos(self.physComp.pos + Vec2d(0,-1))
-            if self.canMove == False:
-                self.state = Globals.PLAYER_STATE_ATTACK
         elif self.state == Globals.PLAYER_STATE_ATTACK:
             if self.attacked == True:
                 self.lvlMgr.camera.setFollowObject(self.lvlMgr.projectiles[len(self.lvlMgr.projectiles) - 1])

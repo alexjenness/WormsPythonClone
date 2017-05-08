@@ -14,11 +14,22 @@ class PhysComp:
         self.force = Vec2d(0,0)
         self.width = width
         self.height = height
+        self.falling = False
         
     def addForce(self, force):
         self.force += force
         
     def update(self, deltaTime):
+        if self.falling:
+            if (self.owner.lvlMgr.loadedMap.checkCollisionLine(self.pos - Vec2d(self.width/2, 0), self.pos + Vec2d(self.width/2, 0))):
+                self.falling = False
+            else:
+                self.addForce(self.owner.lvlMgr.loadedMap.gravity)
+        else:
+            if not (self.owner.lvlMgr.loadedMap.checkCollisionLine(self.pos - Vec2d(self.width/2,0), self.pos + Vec2d(self.width/2,0))):
+               self.falling = True 
+            else:
+                self.vel.y = 0
         self.vel += self.force * deltaTime
         self.pos += self.vel * deltaTime
         self.force = 0
