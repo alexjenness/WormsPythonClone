@@ -39,6 +39,14 @@ class GS_PlayerAttack(GS_Base):
         clicked = pygame.mouse.get_pressed()
 
         if clicked == (1,0,0):
+            print("HI")
             self.lvlMgr.processEvent(Globals.SHOOT)
             
+class GS_Wait(GS_Base):
+    
+    def __init__(self, lvlMgr):
+        GS_Base.__init__(self,lvlMgr)
+        
+    def checkInputs(self):
+        a = 3
                 

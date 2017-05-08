@@ -19,7 +19,6 @@ class LevelManager:
     mapSize = Vec2d(800,600)
     players = []
     turnPlayer = 0
-    projectiles = []
     
     def __init__(self, window):
         self.level = None
@@ -68,6 +67,7 @@ class LevelManager:
 
             
     def removeEntity(self, ent):
+        print("removed")
         self.entities.remove(ent)
         
     def processEvent(self, event):
@@ -81,12 +81,19 @@ class LevelManager:
             self.players[self.turnPlayer].tallJump()
         elif event == Globals.LONG_JUMP:
             self.players[self.turnPlayer].longJump()
-        elif event == Globals.PLAYER_STATE_TURN_END:
+        elif event == Globals.PLAYER_TURN_END:
             self.playerTurnStart()
         elif event == Globals.SHOOT:
+            print("YES")
             if self.players[self.turnPlayer].state == Globals.PLAYER_STATE_ATTACK:
                 self.players[self.turnPlayer].shoot()
+            self.changeGamestate(Globals.GS_WAIT)
             
+    def checkCollision(self, ob):
+        if self.loadedMap.checkCollisionBox(ob.physComp.pos - Vec2d(ob.physComp.width/2, ob.physComp.height/2), Vec2d(ob.width, ob.height)):
+            return True
+        return False
+    
     def update(self, dT):
         if self.loadedMap == None:
             return
@@ -96,12 +103,6 @@ class LevelManager:
         for ent in self.entities:
             ent.update(dT)
         
-        for ent in self.projectiles:
-            ent.update(dT)
-        if len(self.projectiles) > 0:
-            self.camera.setFollowObject(self.projectiles[0])
-        else:
-            self.camera.setFollowObject(self.players[self.turnPlayer])
         self.camera.update()
         
     def draw(self, drawTarget, dT):
@@ -111,9 +112,6 @@ class LevelManager:
         self.loadedMap.draw(self.entitySurface)
         for ent in self.entities:
             ent.draw(self.entitySurface, dT)
-        
-        for pro in self.projectiles:
-            pro.draw(self.entitySurface, dT)
 
         drawTarget.blit(self.entitySurface, (-self.camera.pos.x,-self.camera.pos.y))
         

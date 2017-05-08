@@ -36,6 +36,13 @@ class Map:
                     return True
         return False
         
+    def checkCollisionBox(self, origin, size):
+        for y in range(math.floor(origin.y), math.floor(origin.y + size.y)):
+            for x in range(math.floor(origin.x), math.floor(origin.x + size.x)):
+                if self.pixelData[x][y] == 1:
+                    return True
+        return False
+    
     def checkCollision(self, point):
         if self.pixelData[point.x][point.y] == 1:
             return True

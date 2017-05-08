@@ -20,7 +20,7 @@ class Player:
         self.height = 55
         self.walkSpeed = 48
         self.amountMoved = 0
-        self.moveLimit = 100
+        self.moveLimit = 20
         self.canMove = True
         self.falling = False
         self.attacked = False
@@ -97,8 +97,9 @@ class Player:
     def shoot(self):
         if self.state == Globals.PLAYER_STATE_ATTACK:
             mousePos = pygame.mouse.get_pos()
-            self.lvlMgr.projectiles.append(Projectile(self.lvlMgr,Vec2d(mousePos[0],mousePos[1]),self))
-            self.lvlMgr.projectiles[len(self.lvlMgr.projectiles)-1].physComp.addForce(self.lvlMgr.projectiles[len(self.lvlMgr.projectiles)-1].initVelocity)
+            temp = Projectile(self.lvlMgr,Vec2d(mousePos[0],mousePos[1]),self)
+            self.lvlMgr.addEntity(temp)
+            self.lvlMgr.camera.setFollowObject(temp)
             self.attacked = True
             
             
@@ -137,8 +138,8 @@ class Player:
                 self.physComp.setPos(self.physComp.pos + Vec2d(0,-1))
         elif self.state == Globals.PLAYER_STATE_ATTACK:
             if self.attacked == True:
-                self.lvlMgr.camera.setFollowObject(self.lvlMgr.projectiles[len(self.lvlMgr.projectiles) - 1])
-                self.lvlMgr.processEvent(Globals.PLAYER_STATE_TURN_END)
+                self.state = Globals.PLAYER_STATE_WAITING
+                self.attacked = False
             
     def draw(self, renderTarget, deltaTime):
         self.drawComp.draw(renderTarget, deltaTime)

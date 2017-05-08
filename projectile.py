@@ -1,4 +1,5 @@
 import math
+import Globals
 
 from vec2d import Vec2d
 from physComp import PhysComp
@@ -10,7 +11,7 @@ class Projectile:
         self.entType = 1 #This is a projectile
         self.type = type    #0, 1, 2 = Rocket, Grenade, Homing
         self.owner = owner
-        self.pos = self.owner.physComp.pos
+        self.pos = self.owner.physComp.pos - Vec2d(0, 24)
         self.width = 16     #TEMP values based off type of projectile
         self.height = 19    #TEMP
         self.originPoint = Vec2d(self.width/2, self.height)
@@ -32,15 +33,22 @@ class Projectile:
             self.drawComp = DrawComp(self, "tempProjectile.png", self.width, self.height)
         elif self.type == 2:
             self.drawComp = DrawComp(self, "tempProjectile.png", self.width, self.height)
+            
+        self.physComp.addForce(self.initVelocity)
 
 
          
     def update(self, deltaTime):
         #Update physics
-        self.physComp.addForce(self.lvlMgr.loadedMap.gravity)
-        self.physComp.addForce(self.initVelocity)
+        print(self.physComp.vel)
+        print(self.physComp.pos)
         self.physComp.update(deltaTime)
         
+        
+        
+        if self.physComp.collided:
+            self.lvlMgr.processEvent(Globals.PLAYER_TURN_END)
+            self.lvlMgr.removeEntity(self)
         #Check lifespan
         self.lifespan -= 1
         if self.lifespan <= 0:

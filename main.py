@@ -5,6 +5,8 @@ from player import Player
 from LevelManager import LevelManager
 from GameStates import GS_PlayerMove
 from GameStates import GS_PlayerAttack
+from GameStates import GS_Wait
+
 import Globals
 
 gameStates = []
@@ -23,7 +25,7 @@ def main():
     global gameState
     
     done = False
-    
+    print("HI")
     levelManager = LevelManager(screen)
     levelManager.loadLevel(1)
     levelManager.addPlayer(Vec2d(700,100))
@@ -33,8 +35,10 @@ def main():
     levelManager.players[levelManager.turnPlayer].state = Globals.PLAYER_STATE_MOVE
     levelManager.camera.setFollowObject(levelManager.players[levelManager.turnPlayer])
     levelManager.players[levelManager.turnPlayer + 1].canMove = False
+                        
     gameStates.append(GS_PlayerMove(levelManager))
     gameStates.append(GS_PlayerAttack(levelManager))
+    gameStates.append(GS_Wait(levelManager))
     
     gameState = gameStates[Globals.GS_PLAYER_MOVE]
     

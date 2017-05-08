@@ -15,11 +15,17 @@ class PhysComp:
         self.width = width
         self.height = height
         self.falling = False
+        self.collided = False
         
     def addForce(self, force):
         self.force += force
         
     def update(self, deltaTime):
+        if self.owner.lvlMgr.checkCollision(self.owner):
+            self.collided = True
+        else:
+            self.collided = False
+            
         if self.falling:
             if (self.owner.lvlMgr.loadedMap.checkCollisionLine(self.pos - Vec2d(self.width/2, 0), self.pos + Vec2d(self.width/2, 0))):
                 self.falling = False
