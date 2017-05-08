@@ -96,7 +96,10 @@ class LevelManager:
         
         for ent in self.projectiles:
             ent.update(dT)
-            
+        if len(self.projectiles) > 0:
+            self.camera.setFollowObject(self.projectiles[0])
+        else:
+            self.camera.setFollowObject(self.players[self.turnPlayer])
         self.camera.update()
         
     def draw(self, drawTarget, dT):
@@ -108,7 +111,7 @@ class LevelManager:
             ent.draw(self.entitySurface, dT)
         
         for pro in self.projectiles:
-            pro.draw(self.entitySurface)
+            pro.draw(self.entitySurface,dT)
         drawTarget.blit(self.entitySurface, (-self.camera.pos.x,-self.camera.pos.y))
         
         self.hudSurface.fill((0,0,0,0))

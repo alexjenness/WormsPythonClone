@@ -1,3 +1,4 @@
+import math
 
 from vec2d import Vec2d
 from physComp import PhysComp
@@ -21,20 +22,23 @@ class Projectile:
         self.physComp = PhysComp(self, self.width, self.height,self.owner.physComp.pos)
         self.xVel = self.finalVector.x - self.owner.physComp.pos.x
         self.yVel = self.finalVector.y - self.owner.physComp.pos.y
-        self.initVelocity = Vec2d(self.xVel/10,self.yVel/10)
+        self.magnitudeMulitplier = math.sqrt((self.xVel*self.xVel)+(self.yVel*self.yVel))
+        #self.normalizedInitVeloc = Vec2d()
+        self.initVelocity = Vec2d(self.xVel,self.yVel)
         #Rendering handler component
         if self.type == 0:
-            self.drawComp = DrawComp(self, "projectile1.png", self.width, self.height)
+            self.drawComp = DrawComp(self, "tempProjectile.png", self.width, self.height)
         elif self.type == 1:
-            self.drawComp = DrawComp(self, "projectile2.png", self.width, self.height)
+            self.drawComp = DrawComp(self, "tempProjectile.png", self.width, self.height)
         elif self.type == 2:
-            self.drawComp = DrawComp(self, "projectile3.png", self.width, self.height)
+            self.drawComp = DrawComp(self, "tempProjectile.png", self.width, self.height)
 
 
          
     def update(self, deltaTime):
         #Update physics
         self.physComp.addForce(self.lvlMgr.loadedMap.gravity)
+        self.physComp.addForce(self.initVelocity)
         self.physComp.update(deltaTime)
         
         #Check lifespan

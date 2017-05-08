@@ -98,37 +98,37 @@ class Player:
         if self.state == Globals.PLAYER_STATE_ATTACK:
             mousePos = pygame.mouse.get_pos()
             self.lvlMgr.projectiles.append(Projectile(self.lvlMgr,Vec2d(mousePos[0],mousePos[1]),self))
-            self.lvlMgr.projectiles[len(self.lvlMgr.projectiles)-1].setInitVel
+            #self.lvlMgr.projectiles[len(self.lvlMgr.projectiles)-1].physComp.addForce(self.lvlMgr.projectiles[len(self.lvlMgr.projectiles)-1].initVelocity)
             self.attacked = True
             
             
     def update(self, deltaTime):
+        self.physComp.update(deltaTime)
+        if not self.falling:
+           if not (self.lvlMgr.loadedMap.checkCollisionLine(self.physComp.pos - Vec2d(self.width/2,0), self.physComp.pos + Vec2d(self.width/2,0))):
+               self.falling = True           
+        else:
+           if (self.lvlMgr.loadedMap.checkCollisionLine(self.physComp.pos - Vec2d(self.width/2, 0), self.physComp.pos + Vec2d(self.width/2, 0))):
+               #print("landed")
+               self.falling = False
+           else:
+               if abs(self.physComp.vel.y) > 60:
+                   self.drawComp.subImageIndex = 0
+                   self.drawComp.frameSpeed = 0
+        if self.falling:       
+            self.physComp.addForce(self.lvlMgr.loadedMap.gravity)
+        else:
+            self.physComp.vel.y = 0
+        if (self.lvlMgr.loadedMap.checkCollisionLine(self.physComp.pos - Vec2d(self.width/2, 1), self.physComp.pos + Vec2d(self.width/2, -1))):
+                self.physComp.setPos(self.physComp.pos + Vec2d(0,-1)) 
         if self.state == Globals.PLAYER_STATE_MOVE:
-            self.physComp.update(deltaTime)
             if self.amountMoved >= self.moveLimit:
                 self.canMove = False
-            if not self.falling:
-                if not (self.lvlMgr.loadedMap.checkCollisionLine(self.physComp.pos - Vec2d(self.width/2,0), self.physComp.pos + Vec2d(self.width/2,0))):
-                    self.falling = True           
-            else:
-                if (self.lvlMgr.loadedMap.checkCollisionLine(self.physComp.pos - Vec2d(self.width/2, 0), self.physComp.pos + Vec2d(self.width/2, 0))):
-                    #print("landed")
-                    self.falling = False
-                else:
-                    if abs(self.physComp.vel.y) > 60:
-                        self.drawComp.subImageIndex = 0
-                        self.drawComp.frameSpeed = 0
-            if self.falling:       
-                self.physComp.addForce(self.lvlMgr.loadedMap.gravity)
-            else:
-                self.physComp.vel.y = 0
-            if (self.lvlMgr.loadedMap.checkCollisionLine(self.physComp.pos - Vec2d(self.width/2, 1), self.physComp.pos + Vec2d(self.width/2, -1))):
-                self.physComp.setPos(self.physComp.pos + Vec2d(0,-1))
             if self.canMove == False:
                 self.state = Globals.PLAYER_STATE_ATTACK
         elif self.state == Globals.PLAYER_STATE_ATTACK:
             if self.attacked == True:
-                self.lvlMgr.camera.followObject()
+                self.lvlMgr.camera.setFollowObject(self.lvlMgr.projectiles[len(self.lvlMgr.projectiles) - 1])
                 self.lvlMgr.processEvent(Globals.PLAYER_STATE_TURN_END)
             
     def draw(self, renderTarget, deltaTime):
